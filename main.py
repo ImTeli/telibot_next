@@ -18,7 +18,7 @@ bot = commands.Bot(command_prefix='>>', description=description, intents=nextcor
 
 @bot.event
 async def on_ready():
-    print("#______________________________________________________________#")
+    print("#"+"".center(70,"_")+"#")
     print(f"| Logged in as {bot.user.name} with id {bot.user.id}\n| Bot presente nos seguintes servidores:")
     for g in bot.guilds:
         print(f"| {g} id: {g.id}")
@@ -26,7 +26,7 @@ async def on_ready():
             os.makedirs(f"guilds/{g.id}")
             os.makedirs(f"guilds/{g.id}/sounds")
             os.makedirs(f"guilds/{g.id}/log")
-    print("#______________________________________________________________#")
+    print("#"+"".center(70,"_")+"#")
 
 @bot.command()  # Force commands sync
 async def sinc(ctx: commands.Context):
