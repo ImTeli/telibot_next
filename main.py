@@ -55,13 +55,20 @@ class Audio(nextcord.ui.Modal):
                 async with session.get(url) as resp:
                     if resp.status != 200:
                         raise Exception(f"Código de resposta diferente de 200! Código: {resp.status}")
+                    elif resp.content_type != "audio/mpeg":
+                        raise Exception(f"Arquivo em formato incorreto, formato esperado: audio/mpeg, formato recebido: {resp.content_type}")
+                    elif resp.content_length > 3145728:
+                        raise Exception(f"Arquivo muito grande, tamanho máximo: 3MB! Tamanho recebido: {resp.content_length/1000000:.2f}MB")
                     else:
-                        async with aiofiles.open(filepath, 'wb') as file:
-                            async for data, _ in resp.content.iter_chunks():
-                                await file.write(data)
-                            await interaction.send(
-                                f"{interaction.user.mention} seu arquivo foi salvo com sucesso, entre e saia da sala"
-                                f" para testar!")
+                        try:
+                            async with aiofiles.open(filepath, 'wb') as file:
+                                async for data, _ in resp.content.iter_chunks():
+                                    await file.write(data)
+                                await interaction.send(
+                                    f"{interaction.user.mention} seu arquivo foi salvo com sucesso, entre e saia da sala"
+                                    f" para testar!")
+                        except Exception as n:
+                            await interaction.send(f"Erro durante a gravação do arquivo! Cód. Erro: {n}")
 
         except aiohttp.InvalidURL:
             await interaction.send("Não foi possível baixar o arquivo de áudio pelo link (URL Inválida).")
