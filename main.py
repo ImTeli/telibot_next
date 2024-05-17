@@ -18,15 +18,16 @@ bot = commands.Bot(command_prefix='>>', description=description, intents=nextcor
 
 @bot.event
 async def on_ready():
-    print("#"+"".center(70,"_")+"#")
-    print(f"| Logged in as {bot.user.name} with id {bot.user.id}\n| Bot presente nos seguintes servidores:")
+    print("#" + "".center(70, "_") + "#")
+    print(
+        f"| \033[1;32mLogged in as {bot.user.name} with id {bot.user.id}\n\033[0m| \033[1;33mBot presente nos seguintes servidores:\033[0m")
     for g in bot.guilds:
-        print(f"| {g} id: {g.id}")
+        print(f"| \033[0;33m{g} id: {g.id}\033[0m")
         if not os.path.exists(f"guilds/{g.id}"):
             os.makedirs(f"guilds/{g.id}")
             os.makedirs(f"guilds/{g.id}/sounds")
             os.makedirs(f"guilds/{g.id}/log")
-    print("#"+"".center(70,"_")+"#")
+    print("#" + "".center(70, "_") + "#")
 
 @bot.command()  # Force commands sync
 async def sinc(ctx: commands.Context):
@@ -86,7 +87,7 @@ async def audio(interaction: nextcord.Interaction):
 async def on_voice_state_update(member, before, after):
     if before.channel is None and member.id != 1110960477514772630:
         nome, canal, guilda = member.global_name, member.voice.channel, member.guild
-        print(f"{nome} entrou no canal de voz {canal} no servidor {guilda} em {dt.datetime.now()}.")
+        print(f"\033[0;32m{nome} entrou no canal de voz {canal} no servidor {guilda} em {dt.datetime.now()}.\033[0m")
 
         if os.path.isfile(f"guilds/{member.guild.id}/sounds/{member.id}.mp3"):
             try:
@@ -94,7 +95,7 @@ async def on_voice_state_update(member, before, after):
                                                                    method="fallback")
                 vc = await member.voice.channel.connect()
                 vc.play(source)
-            except:
+            except Exception:
                 pass
 
         while True:
@@ -109,7 +110,7 @@ async def on_voice_state_update(member, before, after):
 
     elif (before.channel is not None and after.channel is None) and member.id != 1110960477514772630:
         nome, canal, guilda = member.global_name, before.channel, member.guild
-        print(f"{nome} saiu do canal de voz {canal} no servidor {guilda} em {dt.datetime.now()}.")
+        print(f"\033[0;31m{nome} saiu do canal de voz {canal} no servidor {guilda} em {dt.datetime.now()}.\033[0m")
 
 
 bot.run(token)
